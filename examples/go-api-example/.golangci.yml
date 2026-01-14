@@ -1,7 +1,4 @@
-run:
-  timeout: 5m
-  tests: true
-  modules-download-mode: readonly
+version: v1.55.2
 
 linters:
   enable:
@@ -20,27 +17,3 @@ linters:
     - noctx
     - errname
     - errorlint
-
-linters-settings:
-  errcheck:
-    check-type-assertions: true
-    check-blank: true
-  
-  govet:
-    check-shadowing: true
-  
-  revive:
-    rules:
-      - name: exported
-        severity: warning
-      - name: unexported-return
-        severity: warning
-      - name: var-naming
-        severity: warning
-
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - errcheck
-        - gosec

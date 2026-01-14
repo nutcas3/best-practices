@@ -1202,6 +1202,353 @@ issues:
 
 ---
 
+## 11. Modern Go Features (Go 1.18+)
+
+### Using `any` Instead of `interface{}`
+
+In Go 1.18 and later, `any` is a type alias for the empty interface. It's more readable and should be preferred in new code.
+
+```go
+// ❌ BAD: Using empty interface
+func ProcessData(data interface{}) {}
+var config map[string]interface{}
+
+// ✅ GOOD: Using any
+func ProcessData(data any) {}
+var config map[string]any
+```
+
+### Type Parameters (Generics)
+
+```go
+// ✅ GOOD: Generic function with constraints
+func Min[T constraints.Ordered](x, y T) T {
+    if x < y {
+        return x
+    }
+    return y
+}
+
+// ✅ GOOD: Generic data structure
+type Stack[T any] struct {
+    items []T
+}
+
+func (s *Stack[T]) Push(item T) {
+    s.items = append(s.items, item)
+}
+
+func (s *Stack[T]) Pop() (T, bool) {
+    var zero T
+    if len(s.items) == 0 {
+        return zero, false
+    }
+    item := s.items[len(s.items)-1]
+    s.items = s.items[:len(s.items)-1]
+    return item, true
+}
+
+// Usage
+ints := &Stack[int]{}
+ints.Push(1)
+ints.Push(2)
+if val, ok := ints.Pop(); ok {
+    fmt.Println(val) // 2
+}
+```
+
+### Type Sets and Interface Satisfaction
+
+```go
+// ✅ GOOD: Type set with union
+type Number interface {
+    ~int | ~int32 | ~int64 | ~float32 | ~float64
+}
+
+// ✅ GOOD: Type constraint with methods
+type Stringer interface {
+    String() string
+}
+
+type Printable interface {
+    Number | Stringer
+}
+
+func Print[T Printable](x T) {
+    fmt.Println(x)
+}
+```
+
+### Structured Logging with `slog` (Go 1.21+)
+
+```go
+// ✅ GOOD: Structured logging
+var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
+func ProcessOrder(ctx context.Context, orderID string) error {
+    logger.Info("processing order",
+        "order_id", orderID,
+        "user_id", ctx.Value("user_id"),
+    )
+    
+    // Process order...
+    
+    logger.Debug("order processed",
+        "order_id", orderID,
+        "duration", time.Since(start),
+    )
+    return nil
+}
+```
+
+### Working with Slices (Go 1.21+)
+
+```go
+// ✅ GOOD: Using new slice package
+import "slices"
+
+// Sort
+slices.Sort(items)
+
+// Binary search
+index := slices.BinarySearch(sorted, target)
+
+// Compare
+if slices.Equal(a, b) {
+    // Slices have same elements
+}
+
+// Clone
+copy := slices.Clone(original)
+```
+
+### Maps (Go 1.21+)
+
+```go
+// ✅ GOOD: Using new maps package
+import "maps"
+
+// Copy map
+dest := maps.Clone(source)
+
+// Compare maps
+if maps.Equal(a, b) {
+    // Maps have same key-value pairs
+}
+
+// Clear map
+maps.Clear(m)  // Better than making a new map
+```
+
+### Error Handling with `errors.Join` (Go 1.20+)
+
+```go
+// ✅ GOOD: Combining multiple errors
+func ProcessItems(items []Item) error {
+    var errs []error
+    for _, item := range items {
+        if err := process(item); err != nil {
+            errs = append(errs, fmt.Errorf("process %v: %w", item.ID, err))
+        }
+    }
+    return errors.Join(errs...)
+}
+```
+
+## 12. Advanced Performance Patterns
+
+### Optimistic Special Cases
+
+```go
+// ❌ BAD: Always using the complex general case
+func ProcessItems(items []Item) error {
+    var result []Result
+    for _, item := range items {
+        // Complex processing...
+    }
+    return saveResults(result)
+}
+
+// ✅ GOOD: Handle common special cases first
+func ProcessItems(items []Item) error {
+    // Handle empty case
+    if len(items) == 0 {
+        return nil
+    }
+
+    // Handle single item case
+    if len(items) == 1 {
+        return processSingleItem(items[0])
+    }
+
+    // Handle general case
+    var result []Result
+    for _, item := range items {
+        // Complex processing...
+    }
+    return saveResults(result)
+}
+```
+
+### Smart Caching Patterns
+
+```go
+// ✅ GOOD: Local cache for high-locality lookups
+type Cache struct {
+    mu    sync.RWMutex
+    items map[string]*Item
+    // Small LRU cache for hot items
+    hot   *lru.Cache
+}
+
+func (c *Cache) Get(key string) (*Item, error) {
+    // Try hot cache first
+    if val, ok := c.hot.Get(key); ok {
+        return val.(*Item), nil
+    }
+
+    // Fall back to main storage
+    c.mu.RLock()
+    defer c.mu.RUnlock()
+    
+    if item, ok := c.items[key]; ok {
+        // Add to hot cache
+        c.hot.Add(key, item)
+        return item, nil
+    }
+    
+    return nil, ErrNotFound
+}
+```
+
+### Memory Layout Optimization
+
+```go
+// ❌ BAD: Cache-unfriendly struct layout
+type BadLayout struct {
+    flag    bool       // 1 byte + 7 padding
+    data    []byte     // 24 bytes
+    counter int64      // 8 bytes
+    active  bool       // 1 byte + 7 padding
+}  // Total: 48 bytes
+
+// ✅ GOOD: Cache-friendly struct layout
+type GoodLayout struct {
+    data    []byte     // 24 bytes
+    counter int64      // 8 bytes
+    flag    bool       // 1 byte
+    active  bool       // 1 byte
+    // 6 bytes padding, but better than 14
+}  // Total: 40 bytes
+```
+
+### Lazy Computation
+
+```go
+// ❌ BAD: Eager computation
+type Config struct {
+    data      []byte
+    hash      []byte // Pre-computed hash
+}
+
+func NewConfig(data []byte) *Config {
+    return &Config{
+        data: data,
+        hash: calculateHash(data), // Always computed
+    }
+}
+
+// ✅ GOOD: Lazy computation
+type Config struct {
+    data      []byte
+    hash      []byte
+    hashOnce  sync.Once
+}
+
+func (c *Config) Hash() []byte {
+    c.hashOnce.Do(func() {
+        c.hash = calculateHash(c.data)
+    })
+    return c.hash
+}
+```
+
+### Buffer Pooling
+
+```go
+// ✅ GOOD: Reuse buffers for reduced allocations
+var bufferPool = sync.Pool{
+    New: func() interface{} {
+        return new(bytes.Buffer)
+    },
+}
+
+func ProcessLargeData(data []byte) error {
+    buf := bufferPool.Get().(*bytes.Buffer)
+    defer func() {
+        buf.Reset()
+        bufferPool.Put(buf)
+    }()
+    
+    // Use buffer...
+    return nil
+}
+```
+
+### Batch Processing
+
+```go
+// ❌ BAD: Processing one at a time
+for _, item := range items {
+    if err := db.Save(item); err != nil {
+        return err
+    }
+}
+
+// ✅ GOOD: Batch processing
+const batchSize = 100
+for i := 0; i < len(items); i += batchSize {
+    end := i + batchSize
+    if end > len(items) {
+        end = len(items)
+    }
+    if err := db.SaveBatch(items[i:end]); err != nil {
+        return err
+    }
+}
+```
+
+### Custom Memory Management
+
+```go
+// ✅ GOOD: Object pool for frequently allocated items
+type Pool struct {
+    pool sync.Pool
+    size int
+}
+
+func NewPool(size int) *Pool {
+    return &Pool{
+        pool: sync.Pool{
+            New: func() interface{} {
+                return make([]byte, size)
+            },
+        },
+        size: size,
+    }
+}
+
+func (p *Pool) Get() []byte {
+    return p.pool.Get().([]byte)
+}
+
+func (p *Pool) Put(buf []byte) {
+    if cap(buf) >= p.size {
+        p.pool.Put(buf[:p.size])
+    }
+}
+```
+
 ## Training Notes for AI Agents
 
 When generating Go code, prioritize:
