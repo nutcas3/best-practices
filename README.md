@@ -72,8 +72,8 @@ Comprehensive guide covering:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/nutcas3/agent-skills.git
-   cd agent-skills
+   git clone https://github.com/nutcas3/best-practices.git
+   cd best-practices
    ```
 
 2. **Browse the skills** in the `skills/` directory
@@ -117,7 +117,7 @@ Comprehensive guide covering:
 4. **Testing**: Include unit tests, property-based tests, and doc tests
 5. **Production**: Enable all Clippy lints and address warnings
 
-## ✅ Pre-Deployment Checklists
+## Pre-Deployment Checklists
 
 ### Go Checklist
 
@@ -141,7 +141,7 @@ Comprehensive guide covering:
 - [ ] Graceful shutdown implemented
 - [ ] Resource limits configured
 
-## 🔧 CI/CD Integration
+## CI/CD Integration
 
 Both skill documents include production-ready CI/CD configurations:
 
@@ -158,7 +158,7 @@ Both skill documents include production-ready CI/CD configurations:
 - Code coverage with tarpaulin
 - Release builds
 
-## 📊 Key Principles
+## Key Principles
 
 ### Universal Best Practices
 
@@ -182,7 +182,7 @@ Both skill documents include production-ready CI/CD configurations:
 - Ownership and borrowing
 - Fearless concurrency
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! To add new skills or improve existing ones:
 
@@ -204,7 +204,7 @@ Each skill document should include:
 - **Checklists**: Pre-deployment verification
 - **References**: Links to authoritative sources
 
-## 📚 Additional Resources
+## Additional Resources
 
 ### Go Resources
 - [100 Go Mistakes](https://100go.co/)
@@ -218,7 +218,7 @@ Each skill document should include:
 - [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)
 - [Apollo Rust Best Practices](https://github.com/apollographql/rust-best-practices)
 
-## 🎯 Roadmap
+## Roadmap
 
 Future skills to be added:
 - [ ] Python best practices
@@ -229,11 +229,11 @@ Future skills to be added:
 - [ ] Cloud-native patterns
 - [ ] Microservices architecture
 
-## 📄 License
+## License
 
 This repository is provided as educational material for training AI agents and developers. Feel free to use, modify, and distribute with attribution.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 These skills are compiled from industry-standard resources and the collective wisdom of the software engineering community:
 
