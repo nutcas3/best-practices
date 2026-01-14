@@ -91,9 +91,116 @@ Advanced Rust patterns and optimizations:
 - Property-based testing
 - Procedural macros
 
+### Web Application Development
+
+#### [Web Application Patterns](skills/web-application-patterns.md)
+
+**Complete guide to building modern web applications:**
+
+**Authentication Flows:**
+- Session-based authentication with secure cookies
+- JWT with refresh tokens (access + refresh pattern)
+- OAuth 2.0 implementation (Google, GitHub)
+- State management for CSRF protection
+- Token revocation and logout mechanisms
+
+**Forms & Validation:**
+- Server-side validation with go-playground/validator
+- Custom validators (strong passwords, adult verification)
+- Secure file upload handling with MIME type detection
+- File size and type validation
+
+**Real-Time Communication:**
+- Production-ready WebSocket server with graceful shutdown
+- Redis pub/sub for distributed messaging
+- Connection pooling and heartbeat mechanisms
+- Broadcasting to specific users/channels
+
+**State Management:**
+- Client state synchronization with Redis
+- Optimistic locking with version control
+- Conflict resolution strategies
+
+**Sources**: OAuth 2.0 RFC, JWT Best Practices, WebSocket RFC, OWASP Session Management
+
+#### [Database Engineering Patterns](skills/database-engineering-patterns.md) 💾
+
+**Production-ready database design and optimization:**
+
+**Schema Design:**
+- Normalized schema design (3NF) with constraints
+- Strategic denormalization with materialized views
+- Polymorphic associations with proper validation
+- Audit trail patterns
+
+**Migrations:**
+- Zero-downtime migration strategies
+- golang-migrate integration
+- Adding columns, indexes, and constraints safely
+- Backfilling data in batches
+
+**Query Optimization:**
+- Indexing strategies (B-tree, GIN, partial, covering)
+- Cursor-based pagination for large datasets
+- N+1 query prevention with batch loading
+- EXPLAIN ANALYZE for performance tuning
+
+**Transaction Management:**
+- Isolation levels (Read Committed, Serializable)
+- Optimistic locking with version columns
+- Pessimistic locking with SELECT FOR UPDATE
+- Deadlock prevention strategies
+
+**Sharding & Partitioning:**
+- Range and hash partitioning
+- Application-level sharding with consistent hashing
+- Shard-aware repository patterns
+
+**Connection Pooling:**
+- Proper pool configuration (max connections, idle timeout)
+- Health checks and connection validation
+
+**Sources**: PostgreSQL Documentation, Database Internals, Use The Index Luke
+
+#### [Caching & Performance Patterns](skills/caching-performance-patterns.md) ⚡
+
+**High-performance caching strategies:**
+
+**Redis Caching:**
+- Cache-aside (lazy loading) pattern
+- Write-through and write-behind caching
+- Tag-based cache invalidation
+- Cache stampede prevention with singleflight
+- Probabilistic early expiration
+
+**Distributed Caching:**
+- Redis cluster configuration
+- Consistent hashing for cache distribution
+- Cache replication and failover
+
+**CDN Integration:**
+- Cache-Control headers (static, dynamic, private)
+- ETag and Last-Modified support
+- CDN purge/invalidation strategies
+- Automatic cache invalidation on content updates
+
+**Rate Limiting:**
+- Token bucket algorithm with Redis
+- Sliding window rate limiter
+- Distributed rate limiting
+- Per-user and per-IP limits
+
+**Performance Optimization:**
+- Response compression middleware
+- Database query result caching
+- Batch operations with DataLoader pattern
+- In-memory caching with Moka (Rust)
+
+**Sources**: Redis Documentation, CDN Best Practices, Caching Strategies
+
 ### Security & Observability
 
-#### [API Security Patterns](skills/api-security-patterns.md) 
+#### [API Security Patterns](skills/api-security-patterns.md) 🔒
 
 **Production-ready security patterns based on real-world audits:**
 
@@ -133,6 +240,116 @@ Advanced Rust patterns and optimizations:
 - Audit logging with sensitive data sanitization
 
 **Sources**: OWASP API Security Top 10, PCI DSS, Real-world Security Audits
+
+#### [Web Security Attacks Guide](skills/web-security-attacks-guide.md) 🛡️
+
+**Comprehensive guide to 100 common web security vulnerabilities:**
+
+**Injection Attacks (1-18):**
+- SQL Injection (union-based, error-based, blind, time-based)
+- NoSQL Injection
+- Command Injection & OS Argument Injection
+- LDAP, XPath, XML Injection
+- Server-Side Template Injection (SSTI)
+- GraphQL Injection
+
+**XSS Attacks (7-18):**
+- Reflected, Stored, DOM-based XSS
+- Blind XSS and Mutation XSS
+- HTML, Attribute, JavaScript Context Injection
+- CSS Injection and DOM Clobbering
+- Prototype Pollution
+
+**CSRF & Session Attacks (19-35):**
+- Cross-Site Request Forgery
+- Login CSRF
+- Session Fixation and Hijacking
+- Weak Session ID Entropy
+
+**Authentication Vulnerabilities (21-30):**
+- Brute Force and Password Spraying
+- Credential Stuffing
+- Account Enumeration
+- OTP Prediction and Reuse
+- MFA Bypass techniques
+
+**JWT Vulnerabilities (36-39):**
+- "none" Algorithm Attack
+- HS256/RS256 Confusion
+- Weak Secret Brute-forcing
+- Claim Tampering
+
+**Access Control (40-50):**
+- IDOR (Insecure Direct Object References)
+- Horizontal/Vertical Privilege Escalation
+- Mass Assignment
+- Multi-Tenant Isolation Bypass
+
+**File Upload Attacks (51-60):**
+- Unrestricted File Upload
+- Double Extension, MIME-Type Spoofing
+- Path Traversal, Zip Slip
+- Upload to RCE/XSS/SSRF
+
+**SSRF & Deserialization (61-73):**
+- Cloud Metadata SSRF (AWS/GCP/Azure)
+- SSRF via Redirects and Webhooks
+- Insecure Deserialization (Java, .NET, PHP, Python)
+
+**Logic Flaws & HTTP Attacks (74-78):**
+- Race Conditions / Double Spend
+- Workflow Bypass
+- HTTP Request Smuggling
+- Cache Poisoning
+
+**Each attack includes:**
+- Attack description and examples
+- Detection methods
+- Mitigation strategies in Go and Rust
+- Security testing patterns
+
+**Sources**: OWASP Top 10, PortSwigger Web Security, HackerOne Reports
+
+#### [API Design Patterns](skills/api-design-patterns.md) 🔌
+
+**Professional API design and distributed systems:**
+
+**RESTful API Design:**
+- Resource naming conventions (collections, nested resources)
+- Proper HTTP status codes (200, 201, 400, 401, 403, 404, 422, 500)
+- Pagination (cursor-based and offset-based)
+- Filtering, sorting, and searching
+- API versioning strategies (URL, header, deprecation)
+- HATEOAS (Hypermedia links)
+
+**GraphQL:**
+- Schema design with proper types and connections
+- Resolver implementation in Go
+- DataLoader pattern for N+1 query prevention
+- Pagination with Relay cursor connections
+- Input validation and error handling
+
+**OpenAPI 3.0:**
+- Comprehensive API specification
+- Request/response schemas
+- Security schemes (Bearer, OAuth2)
+- Parameter validation
+- Error response standards
+
+**Microservices Patterns:**
+- Service discovery with Consul
+- API Gateway with routing and load balancing
+- Circuit breaker implementation
+- Retry and backoff strategies
+- Health checks and monitoring
+
+**Event-Driven Architecture:**
+- Kafka producer/consumer patterns
+- Event sourcing
+- CQRS (Command Query Responsibility Segregation)
+- Message ordering and idempotency
+
+**Sources**: REST API Guidelines, GraphQL Best Practices, OpenAPI Spec, Microservices Patterns
 
 #### [Observability Patterns](skills/observability-patterns.md)
 
