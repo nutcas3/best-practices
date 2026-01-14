@@ -18,7 +18,9 @@ Modern AI coding agents need to understand not just syntax, but the deeper princ
 
 ## Available Skills
 
-### [Go Best Practices](skills/golang-best-practices.md)
+### Core Language Best Practices
+
+#### [Go Best Practices](skills/golang-best-practices.md)
 
 Comprehensive guide covering:
 - Project organization following the standard Go layout
@@ -28,6 +30,7 @@ Comprehensive guide covering:
 - Error handling and reliability patterns
 - Testing strategies (table-driven tests, race detection)
 - Production-ready HTTP clients and servers
+- Modern Go features (Go 1.18+): generics, `any`, `slog`
 
 **Key Topics:**
 - The "happy path" left-aligned pattern
@@ -39,7 +42,7 @@ Comprehensive guide covering:
 
 **Sources**: 100 Go Mistakes and How to Avoid Them, Effective Go, Go Project Layout
 
-### [Rust Best Practices](skills/rust-best-practices.md)
+#### [Rust Best Practices](skills/rust-best-practices.md)
 
 Comprehensive guide covering:
 - Cargo project structure and module organization
@@ -59,6 +62,99 @@ Comprehensive guide covering:
 - Property-based testing with proptest
 
 **Sources**: Rust Style Guide, Apollo Rust Best Practices, Rust API Guidelines
+
+### Advanced Patterns
+
+#### [Go Advanced Patterns](skills/go-advanced-patterns.md)
+
+Advanced concurrency and design patterns:
+- Fan-out/fan-in patterns
+- Adaptive worker pools
+- Circuit breaker implementation
+- Service mesh patterns
+- Event sourcing and CQRS
+- API gateway patterns
+- Domain-driven design in Go
+- Lock-free data structures
+- Memory pools with size classes
+
+#### [Rust Advanced Patterns](skills/rust-advanced-patterns.md)
+
+Advanced Rust patterns and optimizations:
+- Zero-copy parsing
+- Custom allocators and SIMD
+- Type state pattern
+- Const generics
+- Actor pattern
+- Work stealing schedulers
+- Error context chains
+- Property-based testing
+- Procedural macros
+
+### Security & Observability
+
+#### [API Security Patterns](skills/api-security-patterns.md) 
+
+**Production-ready security patterns based on real-world audits:**
+
+**Authentication & Authorization:**
+- JWT validation with algorithm verification
+- Token revocation and logout mechanisms
+- Strong password/PIN policies (6+ digits)
+- Account lockout (5 attempts, 15-min lockout)
+- Multi-factor authentication (TOTP, SMS OTP)
+- Role-based access control (RBAC)
+- IDOR prevention
+- Field-level access control
+
+**Network Security:**
+- CORS configuration (no wildcards)
+- HTTPS enforcement with HSTS
+- CSRF protection
+- Rate limiting (general and auth-specific)
+- Security headers (CSP, X-Frame-Options, etc.)
+
+**Input Validation:**
+- Comprehensive validation patterns
+- SQL injection prevention
+- XSS prevention
+- Decimal/amount validation for financial apps
+
+**Business Logic Security:**
+- Mandatory idempotency for financial operations
+- Race condition prevention (database locking)
+- Replay attack prevention (nonce + timestamp)
+- Business rule validation
+
+**Data Protection:**
+- Field-level encryption at rest
+- PII handling and anonymization
+- Data retention policies
+- Audit logging with sensitive data sanitization
+
+**Sources**: OWASP API Security Top 10, PCI DSS, Real-world Security Audits
+
+#### [Observability Patterns](skills/observability-patterns.md)
+
+Monitoring and security patterns:
+- Structured logging with context propagation
+- Distributed tracing with OpenTelemetry
+- Metrics collection with Prometheus
+- Health checks and monitoring
+- Rate limiting implementations
+- Input validation and sanitization
+- Security headers and authentication
+
+#### [Testing Patterns](skills/testing-patterns.md)
+
+Advanced testing strategies:
+- Property-based testing (rapid, proptest)
+- Contract testing for APIs
+- Integration testing with test containers
+- Load testing (vegeta, criterion)
+- Chaos testing for resilience
+- Mock testing with proper isolation
+- Fuzz testing for security
 
 ## Quick Start
 
