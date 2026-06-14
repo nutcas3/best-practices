@@ -3,7 +3,7 @@
 ## Skill Metadata
 - **Domain**: Rust Programming Language
 - **Skill Level**: Intermediate to Advanced
-- **Last Updated**: 2024
+- **Last Updated**: 2026
 - **Sources**: Rust Style Guide, Apollo Rust Best Practices, Rust for System Programming
 
 ## Overview
